@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor User
+    participant UI as Thymeleaf UI
+    participant UC as UserController
+    participant VR as VehicleRepository
+    participant SR as ParkingSlotRepository
+    participant BR as BookingRepository
+    participant DB as MySQL database
+    User->>UI: Select vehicle and parking slot
+    UI->>UC: POST /user/book-slot
+    UC->>VR: find vehicle for logged-in user
+    UC->>SR: find slot and verify AVAILABLE
+    UC->>BR: save Booking(Pending)
+    UC->>SR: save slot status BOOKED
+    SR->>DB: persist slot
+    BR->>DB: persist booking
+    UC-->>UI: Redirect to dashboard
+    UI-->>User: Show booking confirmation

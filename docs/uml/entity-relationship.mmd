@@ -1,0 +1,82 @@
+erDiagram
+    USERS ||--o{ VEHICLE : owns
+    USERS ||--o{ BOOKING : makes
+    USERS ||--o{ NOTIFICATION : receives
+    ADMINS ||--o{ REPORT : generates
+    ADMINS o|--o{ NOTIFICATION : creates
+    PARKINGLOT ||--o{ PARKINGSLOT : contains
+    VEHICLE ||--o{ BOOKING : used_in
+    PARKINGSLOT ||--o{ BOOKING : reserved_by
+    BOOKING ||--o{ PAYMENT : paid_by
+    VEHICLE ||--o{ VEHICLELOG : records
+    PARKINGLOT ||--o{ VEHICLELOG : records
+    USERS {
+      int user_id PK
+      varchar name
+      varchar email UK
+      varchar password
+      varchar contact_no
+    }
+    ADMINS {
+      int admin_id PK
+      varchar name
+      varchar email UK
+      varchar password
+      varchar role
+    }
+    VEHICLE {
+      int vehicle_id PK
+      int user_id FK
+      varchar vehicle_no UK
+      varchar vehicle_type
+    }
+    PARKINGLOT {
+      int lot_id PK
+      varchar city
+      varchar location
+      int total_slots
+      decimal price_hr
+    }
+    PARKINGSLOT {
+      int slot_id PK
+      int lot_id FK
+      varchar status
+    }
+    BOOKING {
+      int booking_id PK
+      int user_id FK
+      int vehicle_id FK
+      int slot_id FK
+      datetime start_time
+      datetime end_time
+      varchar payment_status
+    }
+    PAYMENT {
+      int payment_id PK
+      int booking_id FK
+      decimal amount
+      varchar method
+      varchar status
+      datetime timestamp
+    }
+    VEHICLELOG {
+      int log_id PK
+      int vehicle_id FK
+      int lot_id FK
+      datetime entry_time
+      datetime exit_time
+    }
+    REPORT {
+      int report_id PK
+      int admin_id FK
+      varchar type
+      datetime generated_date
+    }
+    NOTIFICATION {
+      int notification_id PK
+      int user_id FK
+      int admin_id FK
+      varchar type
+      text description
+      datetime timestamp
+    }

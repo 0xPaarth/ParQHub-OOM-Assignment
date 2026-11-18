@@ -1,475 +1,119 @@
-# 🚗 ParQHub - Smart Parking Management System
+# ParQHub - Smart Parking Management System
 
-[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.4-green.svg)](https://spring.io/projects/spring-boot)
-[![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)](https://www.mysql.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+ParQHub is a Java 21 and Spring Boot web application for vehicle parking reservation and management. The current implementation supports user registration, vehicle management, parking search, slot booking, vehicle entry/exit logging, payment processing, notifications, administration, and operational reports.
 
-> An intelligent, automated vehicle parking reservation and management platform designed to streamline urban parking solutions.
+## Team Members
 
-## 🌟 Overview
+- Paarth Arora
+- Mannat Jain
+- Kajal Jayaswal
 
-ParQHub is a comprehensive parking management system that revolutionizes how users find, book, and manage parking spaces. Built with modern web technologies, it offers seamless integration between users, parking facilities, and administrative management.
+## Features
 
-### 🎯 Key Features
+### User workflows
 
-#### 👥 **User Features**
-- **Smart Parking Discovery**: Real-time search and filtering of available parking spots
-- **Instant Reservations**: Book parking spaces with just a few clicks
-- **Multi-Vehicle Management**: Register and manage multiple vehicles per account
-- **Payment Integration**: Secure payment processing with receipt generation
-- **Booking History**: Complete transaction and booking history tracking
-- **Real-time Notifications**: Get updates on booking status, payments, and system alerts
-- **Profile Management**: Comprehensive user settings and profile customization
+- Register a user with one or more vehicles.
+- Log in using the user session.
+- Search parking lots by city and location.
+- View available parking slots and create bookings.
+- Record vehicle entry and exit.
+- Calculate parking duration and process Card, Cash, or Arrival payments.
+- View bookings, payments, downloadable text receipts, notifications, and settings.
 
-#### 🔧 **Admin Features**
-- **Comprehensive Dashboard**: Real-time analytics and system monitoring
-- **Parking Lot Management**: Add, edit, and monitor parking facilities
-- **User Management**: Complete user account and vehicle registration oversight
-- **Financial Reporting**: Detailed revenue analytics with export capabilities
-- **Occupancy Analytics**: Track parking utilization and performance metrics
-- **System Monitoring**: Monitor system health and user activities
+### Administrator workflows
 
-#### 🏢 **System Features**
-- **Real-time Availability**: Live parking space status updates
-- **Dynamic Pricing**: Flexible pricing models based on location and demand
-- **Automated Notifications**: Email-based communication system
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
-- **Security**: Role-based access control and secure authentication
+- Authenticate administrators by role.
+- View role-filtered dashboard information.
+- Inspect parking lots, slots, and occupancy statistics.
+- Manage application tables through the administrative interface.
+- Generate financial, occupancy, and performance reports.
+- Send parking-slot/security notifications.
 
-## 🏗️ System Architecture
+## Technology Stack
 
-### Technology Stack
+- Java 21
+- Spring Boot 3.3.4
+- Spring MVC and Thymeleaf
+- Spring Data JPA / Hibernate
+- MySQL connector 8.1.0
+- Spring Mail
+- Maven
+- H2 runtime dependency for testing
 
-#### Backend
-- **Framework**: Spring Boot 3.3.4
-- **Language**: Java 21
-- **Database**: MySQL 8.0
-- **ORM**: Spring Data JPA with Hibernate
-- **Security**: Spring Security (role-based authentication)
-- **Email**: Spring Mail with SMTP integration
+The configured datasource is `jdbc:mysql://localhost:3306/parqhub_db`. Application settings are in [`src/main/resources/application.properties`](src/main/resources/application.properties). The repository does not currently include the Spring Security starter; authentication is implemented with repository lookups and HTTP sessions.
 
-#### Frontend
-- **Template Engine**: Thymeleaf
-- **Styling**: Tailwind CSS 3.x
-- **Icons**: Font Awesome 6.4.0
-- **Typography**: Inter Font Family
-- **UI Components**: Custom glass morphism and gradient designs
+## Architecture
 
-#### Database Design
-```
--- Core entities
-├── users (user management)
-├── vehicles (vehicle registration)
-├── parking_lots (facility management)
-├── parking_slots (space inventory)
-├── bookings (reservation management)
-├── payments (transaction processing)
-├── notifications (communication system)
-├── vehicle_logs (entry/exit tracking)
-└── admins (administrative access)
+```text
+Browser
+  -> Spring MVC controllers
+  -> Service layer and Strategy contexts
+  -> Spring Data JPA repositories
+  -> MySQL parqhub_db
 ```
 
-## 🚀 Quick Start
+- `controller`: public, user, and administrator request handlers.
+- `model`: JPA entities and the `ParkingSlotDTO` / `VehicleDTO` transfer classes.
+- `repository`: Spring Data JPA repository interfaces.
+- `service`: parking-slot, parking-viewer, payment, and administrator-authentication services.
+- `strategy/payment`: Card, Cash, and Arrival payment strategies.
+- `strategy/adminauth`: role-specific administrator-authentication strategies.
+- `src/main/resources/templates`: Thymeleaf views.
 
-### Prerequisites
+## OOP and Design Patterns
 
-Before running ParQHub, ensure you have the following installed:
+The implementation demonstrates:
 
-- **Java Development Kit (JDK) 21** or higher
-- **MySQL Server 8.0** or higher
-- **Maven 3.6** or higher
-- **Git** for version control
+- **Encapsulation:** private model fields with public accessors.
+- **Abstraction:** repository and strategy interfaces.
+- **Polymorphism:** interchangeable payment and administrator-authentication strategies.
+- **Composition and association:** JPA relationships between users, vehicles, bookings, slots, payments, logs, reports, and notifications.
+- **MVC:** controllers, model entities, and Thymeleaf views.
+- **Repository pattern:** `JpaRepository` interfaces abstract persistence.
+- **Service Layer pattern:** business operations are separated from request handling.
+- **Dependency Injection:** Spring-managed dependencies are injected into controllers and services.
+- **Strategy pattern:** `PaymentContext` and `AdminAuthenticationContext` delegate to concrete strategies.
+- **DTO pattern:** `ParkingSlotDTO` and `VehicleDTO` expose focused transfer data.
 
-### Installation
+The SOLID discussion in the report is evidence-based: the code supports separation of responsibilities, interfaces for replaceable strategies, and dependency inversion through Spring-managed abstractions. It does not claim that every class is perfectly compliant.
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/your-username/parqhub.git
-   cd parqhub
-   ```
+## UML Documentation
 
-2. **Database Setup**
-   ```sql
-   -- Create database
-   CREATE DATABASE parqhub_db;
-   
-   -- Create user (optional)
-   CREATE USER 'parqhub_user'@'localhost' IDENTIFIED BY 'your_password';
-   GRANT ALL PRIVILEGES ON parqhub_db.* TO 'parqhub_user'@'localhost';
-   FLUSH PRIVILEGES;
-   ```
+Mermaid source files and exported SVG/PNG diagrams are in [`docs/uml`](docs/uml):
 
-3. **Configure Application**
-   
-   Update `src/main/resources/application.properties`:
-   ```properties
-   # Database Configuration
-   spring.datasource.url=jdbc:mysql://localhost:3306/parqhub_db?useSSL=false&serverTimezone=UTC
-   spring.datasource.username=root
-   spring.datasource.password=your_password
-   
-   # Email Configuration (Gmail SMTP)
-   spring.mail.username=your-email@gmail.com
-   spring.mail.password=your-app-password
-   ```
+| Diagram | Source | Export |
+|---|---|---|
+| Use Case | [`use-case.mmd`](docs/uml/use-case.mmd) | [`use-case.svg`](docs/uml/use-case.svg) |
+| Class | [`class-diagram.mmd`](docs/uml/class-diagram.mmd) | [`class-diagram.svg`](docs/uml/class-diagram.svg) |
+| Booking sequence | [`sequence-booking.mmd`](docs/uml/sequence-booking.mmd) | [`sequence-booking.svg`](docs/uml/sequence-booking.svg) |
+| Payment sequence | [`sequence-payment.mmd`](docs/uml/sequence-payment.mmd) | [`sequence-payment.svg`](docs/uml/sequence-payment.svg) |
+| Entry/exit sequence | [`sequence-entry-exit.mmd`](docs/uml/sequence-entry-exit.mmd) | [`sequence-entry-exit.svg`](docs/uml/sequence-entry-exit.svg) |
+| Activity | [`activity.mmd`](docs/uml/activity.mmd) | [`activity.svg`](docs/uml/activity.svg) |
+| State machine | [`state-machine.mmd`](docs/uml/state-machine.mmd) | [`state-machine.svg`](docs/uml/state-machine.svg) |
+| Component | [`component.mmd`](docs/uml/component.mmd) | [`component.svg`](docs/uml/component.svg) |
+| Deployment | [`deployment.mmd`](docs/uml/deployment.mmd) | [`deployment.svg`](docs/uml/deployment.svg) |
+| Package | [`package.mmd`](docs/uml/package.mmd) | [`package.svg`](docs/uml/package.svg) |
+| Entity relationship | [`entity-relationship.mmd`](docs/uml/entity-relationship.mmd) | [`entity-relationship.svg`](docs/uml/entity-relationship.svg) |
 
-4. **Build and Run**
-   ```bash
-   # Install dependencies
-   mvn clean install
-   
-   # Run the application
-   mvn spring-boot:run
-   ```
+The diagrams are based on the Java entities, controller mappings, service/strategy classes, repository interfaces, and SQL foreign keys in this repository.
 
-5. **Access the Application**
-   - **Main Application**: http://localhost:8080
-   - **User Login**: http://localhost:8080/login
-   - **Admin Portal**: http://localhost:8080/admin/login
-   - **Registration**: http://localhost:8080/register
+## Assignment Deliverables
 
-## 📱 User Interface
+- [Object-Oriented Modelling report - DOCX](docs/report/ParQHub_OOM_Report.docx)
+- [Object-Oriented Modelling report - PDF](docs/report/ParQHub_OOM_Report.pdf)
+- [OOPS presentation - PPTX](docs/presentation/ParQHub_OOPS_Presentation.pptx)
 
-### Design Philosophy
+## Run the Application
 
-ParQHub features a modern, dark-themed interface with distinct color schemes for different user roles:
+Prerequisites: JDK 21, Maven, and a MySQL-compatible database.
 
-#### 🌙 **User Interface** (Blue Theme)
-- **Primary Colors**: Blue gradients (#3b82f6 to #1d4ed8)
-- **Background**: Dark navy with floating blue orbs
-- **Glass Morphism**: Translucent cards with backdrop blur
-- **Interactive Elements**: Smooth hover animations and transitions
-
-#### 🔴 **Admin Interface** (Red Theme)  
-- **Primary Colors**: Red gradients (#dc2626 to #b91c1c)
-- **Background**: Dark crimson with security-focused design
-- **Access Control**: Warning badges and security notices
-- **Professional Layout**: Clean, business-oriented interface
-
-#### 🧡 **Registration Interface** (Orange Theme)
-- **Primary Colors**: Orange gradients (#f97316 to #ea580c)
-- **Background**: Warm dark tones with orange accents
-- **Dynamic Forms**: Multi-step vehicle registration
-- **User-Friendly**: Intuitive form design with clear validation
-
-### Key UI Components
-
-- **Floating Shapes**: Animated background elements for visual appeal
-- **Glass Cards**: Translucent containers with backdrop blur effects
-- **Gradient Buttons**: Modern button design with hover animations
-- **Responsive Layout**: Mobile-first design approach
-- **Loading States**: Smooth transition feedback for user actions
-
-## 🔧 Development
-
-### Project Structure
-
-```
-parqhub/
-├── src/
-│   ├── main/
-│   │   ├── java/com/prmplatform/parqhub/
-│   │   │   ├── controller/           # REST controllers
-│   │   │   │   ├── admin/           # Admin-specific controllers
-│   │   │   │   └── user/            # User-specific controllers
-│   │   │   ├── model/               # JPA entities and DTOs
-│   │   │   ├── repository/          # Data access layer
-│   │   │   └── ParqHubApplication.java
-│   │   └── resources/
-│   │       ├── templates/           # Thymeleaf templates
-│   │       │   ├── admin/          # Admin interface pages
-│   │       │   └── user/           # User interface pages
-│   │       ├── static/             # Static assets
-│   │       └── application.properties
-│   └── test/                       # Unit and integration tests
-├── pom.xml                         # Maven dependencies
-└── README.md
-```
-
-### Key Controllers
-
-#### User Controllers
-- **UserController**: Authentication, dashboard, profile management
-- **BookingController**: Parking reservations and booking management
-- **PaymentController**: Payment processing and receipt generation
-- **VehicleLogController**: Entry/exit tracking
-
-#### Admin Controllers
-- **AdminController**: Admin authentication and dashboard
-- **ManageTablesController**: CRUD operations for all entities
-- **ReportController**: Analytics and reporting functionality
-
-### Database Relationships
-
-```mermaid
-graph TD
-    A[Users] --> B[Vehicles]
-    A --> C[Bookings]
-    C --> D[Payments]
-    C --> E[ParkingSlots]
-    E --> F[ParkingLots]
-    A --> G[Notifications]
-    B --> H[VehicleLogs]
-    C --> H
-```
-
-## 🛠️ API Endpoints
-
-### User Endpoints
-```http
-GET    /user/dashboard          # User dashboard
-POST   /user/login              # User authentication
-GET    /user/findparking        # Search available parking
-POST   /user/book               # Create booking
-GET    /user/bookings           # View booking history
-POST   /user/payment            # Process payment
-GET    /user/vehicles           # Manage vehicles
-GET    /user/notifications      # View notifications
-```
-
-### Admin Endpoints
-```http
-GET    /admin/dashboard         # Admin dashboard
-POST   /admin/login             # Admin authentication
-GET    /admin/tables            # Data management interface
-GET    /admin/reports           # Analytics and reports
-POST   /admin/manage            # CRUD operations
-GET    /admin/parking-viewer    # Real-time parking monitor
-```
-
-## 📊 Features Breakdown
-
-### 🎫 Booking System
-- **Real-time Availability**: Live parking space status
-- **Smart Scheduling**: Conflict-free reservation system
-- **Flexible Duration**: Hourly, daily, or custom booking periods
-- **Automatic Confirmation**: Instant booking confirmation emails
-
-### 💳 Payment Processing
-- **Secure Transactions**: Encrypted payment processing
-- **Multiple Payment Methods**: Card, digital wallets support
-- **Receipt Generation**: Automated receipt creation and email delivery
-- **Transaction History**: Complete payment audit trail
-
-### 📱 Notification System
-- **Email Integration**: SMTP-based email notifications
-- **Event-Driven**: Automated notifications for bookings, payments, reminders
-- **Customizable**: User preference-based notification settings
-- **Admin Alerts**: System monitoring and issue notifications
-
-### 📈 Analytics & Reporting
-- **Revenue Analytics**: Financial performance tracking
-- **Occupancy Reports**: Parking utilization metrics
-- **User Analytics**: User behavior and engagement insights
-- **Export Capabilities**: CSV/PDF report generation
-
-## 🔒 Security Features
-
-### Authentication & Authorization
-- **Role-Based Access**: Separate user and admin access levels
-- **Session Management**: Secure session handling
-- **Password Security**: Encrypted password storage
-- **Access Control**: Protected endpoints and data isolation
-
-### Data Protection
-- **Input Validation**: Server-side validation for all inputs
-- **SQL Injection Prevention**: Parameterized queries with JPA
-- **XSS Protection**: Template-based rendering with Thymeleaf
-- **CSRF Protection**: Cross-site request forgery prevention
-
-## 🚀 Deployment
-
-### Production Deployment
-
-1. **Build Production JAR**
-   ```bash
-   mvn clean package -Dmaven.test.skip=true
-   ```
-
-2. **Environment Configuration**
-   ```properties
-   # Production database
-   spring.datasource.url=jdbc:mysql://production-db:3306/parqhub_db
-   spring.profiles.active=production
-   
-   # Security settings
-   server.port=8080
-   server.servlet.context-path=/parqhub
-   ```
-
-3. **Run Application**
-   ```bash
-   java -jar target/parqhub-0.0.1-SNAPSHOT.jar
-   ```
-
-### Docker Deployment
-
-```
-FROM openjdk:21-jdk-slim
-COPY target/parqhub-0.0.1-SNAPSHOT.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app.jar"]
-```
-
-## 🧪 Testing
-
-### Running Tests
 ```bash
-# Run all tests
-mvn test
-
-# Run specific test class
-mvn test -Dtest=UserControllerTest
-
-# Run with coverage
-mvn test jacoco:report
+./mvnw test
+./mvnw spring-boot:run
 ```
 
-### Test Coverage
-- **Unit Tests**: Controller and service layer testing
-- **Integration Tests**: Database and API endpoint testing
-- **UI Tests**: Frontend functionality validation
+Create/configure the `parqhub_db` database before starting the application. The SQL reference files are [`db.sql`](db.sql) and [`crdb.sql`](crdb.sql).
 
-## 🎨 Design Patterns
+## Validation
 
-### Design Pattern(s) Used
-
-ParQHub implements several well-established design patterns to ensure a robust, maintainable, and scalable architecture:
-
-#### 1. Model-View-Controller (MVC) Pattern
-- **Implementation**: The application follows Spring Boot's MVC architecture with clear separation between controllers, models, and views.
-- **Components**:
-  - **Model**: Entity classes in the `model` package (e.g., [User](file:///c:/Users/hasit/OneDrive/Documents/SLIIT/Work/Y2S1/SE2030%20-%20Software%20Engineering/parqHub/src/main/java/com/prmplatform/parqhub/model/User.java), [Booking](file:///c:/Users/hasit/OneDrive/Documents/SLIIT/Work/Y2S1/SE2030%20-%20Software%20Engineering/parqHub/src/main/java/com/prmplatform/parqhub/model/Booking.java), [ParkingLot](file:///c:/Users/hasit/OneDrive/Documents/SLIIT/Work/Y2S1/SE2030%20-%20Software%20Engineering/parqHub/src/main/java/com/prmplatform/parqhub/model/ParkingLot.java))
-  - **View**: Thymeleaf templates in the `resources/templates` directory
-  - **Controller**: Classes in the `controller` package (e.g., [UserController](file:///c:/Users/hasit/OneDrive/Documents/SLIIT/Work/Y2S1/SE2030%20-%20Software%20Engineering/parqHub/src/main/java/com/prmplatform/parqhub/controller/user/UserController.java), [AdminController](file:///c:/Users/hasit/OneDrive/Documents/SLIIT/Work/Y2S1/SE2030%20-%20Software%20Engineering/parqHub/src/main/java/com/prmplatform/parqhub/controller/admin/AdminController.java))
-
-#### 2. Repository Pattern
-- **Implementation**: Data access is handled through repository interfaces that extend Spring Data JPA's JpaRepository.
-- **Components**: Classes in the `repository` package (e.g., [UserRepository](file:///c:/Users/hasit/OneDrive/Documents/SLIIT/Work/Y2S1/SE2030%20-%20Software%20Engineering/parqHub/src/main/java/com/prmplatform/parqhub/repository/UserRepository.java), [BookingRepository](file:///c:/Users/hasit/OneDrive/Documents/SLIIT/Work/Y2S1/SE2030%20-%20Software%20Engineering/parqHub/src/main/java/com/prmplatform/parqhub/repository/BookingRepository.java))
-- **Benefits**: Abstracts data access logic, provides consistent data access interface, and enables easy testing with mock repositories.
-
-#### 3. Service Layer Pattern
-- **Implementation**: Business logic is encapsulated in service classes annotated with `@Service`.
-- **Components**: Classes in the `service` package (e.g., [ParkingLotService](file:///c:/Users/hasit/OneDrive/Documents/SLIIT/Work/Y2S1/SE2030%20-%20Software%20Engineering/parqHub/src/main/java/com/prmplatform/parqhub/service/ParkingLotService.java), [ParkingViewerService](file:///c:/Users/hasit/OneDrive/Documents/SLIIT/Work/Y2S1/SE2030%20-%20Software%20Engineering/parqHub/src/main/java/com/prmplatform/parqhub/service/ParkingViewerService.java))
-- **Benefits**: Separates business logic from presentation logic, promotes reusability, and improves testability.
-
-#### 4. Dependency Injection (DI) Pattern
-- **Implementation**: Spring's built-in DI container manages object dependencies through constructor injection.
-- **Example**: [UserController](file:///c:/Users/hasit/OneDrive/Documents/SLIIT/Work/Y2S1/SE2030%20-%20Software%20Engineering/parqHub/src/main/java/com/prmplatform/parqhub/controller/user/UserController.java) constructor injection of repositories
-- **Benefits**: Loose coupling between components, easier testing through mock injection, and improved code maintainability.
-
-### Justification for Each Pattern
-
-#### MVC Pattern Justification
-The MVC pattern is ideal for web applications like ParQHub because it:
-- Separates concerns clearly, making the codebase more maintainable
-- Allows parallel development of frontend and backend components
-- Facilitates easier testing of individual components
-- Provides a familiar structure for developers working with Spring Boot
-
-#### Repository Pattern Justification
-The Repository pattern is suitable for ParQHub because it:
-- Abstracts the underlying database operations, making it easier to switch databases if needed
-- Centralizes data access logic, reducing code duplication
-- Simplifies testing by allowing mock repositories to be injected
-- Provides a consistent interface for data operations across the application
-
-#### Service Layer Pattern Justification
-The Service Layer pattern benefits ParQHub by:
-- Encapsulating business logic separately from presentation concerns
-- Promoting reusability of business logic across different controllers
-- Making unit testing easier by isolating business logic from web framework dependencies
-- Improving maintainability by centralizing business rules in one place
-
-#### Dependency Injection Pattern Justification
-Dependency Injection is appropriate for ParQHub because it:
-- Reduces coupling between components, making the system more modular
-- Simplifies configuration and management of dependencies
-- Enables easier unit testing through mock object injection
-- Leverages Spring's powerful DI container for automatic bean management
-
-These design patterns work together to create a robust, maintainable, and scalable architecture that follows industry best practices for enterprise Java applications.
-
-## 🤝 Contributing
-
-### Development Workflow
-
-1. **Fork the Repository**
-2. **Create Feature Branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. **Make Changes**
-4. **Write Tests**
-5. **Submit Pull Request**
-
-### Code Standards
-- **Java**: Follow Oracle Java coding conventions
-- **Spring Boot**: Adhere to Spring Boot best practices
-- **Database**: Use proper naming conventions and indexing
-- **Frontend**: Maintain consistent styling and responsive design
-
-## 📋 Roadmap
-
-### Upcoming Features
-- [ ] **Mobile Application**: Native iOS and Android apps
-- [ ] **QR Code Integration**: QR-based parking access
-- [ ] **IoT Integration**: Smart parking sensors
-- [ ] **Machine Learning**: Predictive parking analytics
-- [ ] **Multi-language Support**: Internationalization
-- [ ] **Advanced Security**: Two-factor authentication
-
-### Version History
-- **v1.0.0**: Core parking management system
-- **v1.1.0**: Enhanced UI/UX with dark themes
-- **v1.2.0**: Advanced reporting and analytics (planned)
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-#### Database Connection
-```bash
-# Check MySQL service
-systemctl status mysql
-
-# Test connection
-mysql -u root -p -h localhost parqhub_db
-```
-
-#### Email Configuration
-```properties
-# Gmail App Password required
-spring.mail.password=your-16-digit-app-password
-```
-
-#### Port Conflicts
-```properties
-# Change default port
-server.port=8081
-```
-
-
-### Community
-- **GitHub Discussions**: Project discussions and Q&A
-- **Stack Overflow**: Tag questions with `parqhub`
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Spring Boot Team**: For the excellent framework
-- **Tailwind CSS**: For the utility-first CSS framework  
-- **Font Awesome**: For the comprehensive icon library
-- **MySQL**: For reliable database management
-- **Thymeleaf**: For powerful template processing
-
----
-
-
-⭐ **Star this repository if you find it helpful!**
-
-*Built with ❤️ for smarter urban mobility*
+The generated Office documents can be opened with Microsoft Office or LibreOffice. The PDF is exported from the DOCX using LibreOffice. The application source code is unchanged; documentation and assignment deliverables are under `docs/`, with this README updated to describe the actual implementation.

@@ -1,0 +1,22 @@
+sequenceDiagram
+    actor User
+    participant PC as PaymentController
+    participant PS as PaymentProcessingService
+    participant CTX as PaymentContext
+    participant STR as Card/Cash/Arrival strategy
+    participant PR as PaymentRepository
+    participant BR as BookingRepository
+    participant SR as ParkingSlotRepository
+    participant Mail as JavaMailSender
+    User->>PC: POST /user/processPayment
+    PC->>PS: processPayment(method, booking, amount)
+    PS->>CTX: setStrategy(selected)
+    CTX->>STR: processPayment()
+    STR-->>CTX: Payment entity
+    CTX-->>PS: Payment entity
+    PS-->>PC: Payment result
+    PC->>PR: save payment
+    PC->>BR: mark booking Completed
+    PC->>SR: mark slot AVAILABLE
+    PC->>Mail: send confirmation email
+    PC-->>User: Payment success / receipt

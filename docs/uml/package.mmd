@@ -1,0 +1,17 @@
+flowchart TD
+    Root["com.prmplatform.parqhub"]
+    Root --> Controller["controller"]
+    Controller --> AdminController["controller.admin"]
+    Controller --> UserController["controller.user"]
+    Root --> Model["model"]
+    Root --> Repository["repository"]
+    Root --> Service["service"]
+    Root --> Strategy["strategy"]
+    Strategy --> PaymentStrategy["strategy.payment"]
+    Strategy --> AdminAuth["strategy.adminauth"]
+    Controller --> Service
+    Controller --> Repository
+    Service --> Repository
+    Service --> Strategy
+    Repository --> Model
+    Controller --> Model

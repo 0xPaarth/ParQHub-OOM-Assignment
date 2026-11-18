@@ -1,0 +1,18 @@
+flowchart TD
+    Start((Start)) --> Login{User logged in?}
+    Login -- No --> UserLogin[Show user login]
+    UserLogin --> Login
+    Login -- Yes --> Search[Search city/location]
+    Search --> Slots[Load available parking slots]
+    Slots --> Select[Select vehicle and slot]
+    Select --> Available{Slot available?}
+    Available -- No --> Search
+    Available -- Yes --> Book[Create pending booking]
+    Book --> Park[Record vehicle entry]
+    Park --> Occupied[Set slot OCCUPIED]
+    Occupied --> Exit[Record vehicle exit]
+    Exit --> Duration[Calculate parking duration]
+    Duration --> Method[Select Card, Cash, or Arrival]
+    Method --> Payment[Create and save payment]
+    Payment --> Complete[Complete booking and free slot]
+    Complete --> End((End))

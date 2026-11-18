@@ -1,0 +1,15 @@
+stateDiagram-v2
+    [*] --> AVAILABLE
+    AVAILABLE --> BOOKED: booking created
+    BOOKED --> OCCUPIED: vehicle entry
+    OCCUPIED --> AVAILABLE: vehicle exit/payment flow
+    BOOKED --> AVAILABLE: booking/payment completion
+    state "VehicleLog active" as ActiveLog
+    state "VehicleLog completed" as CompletedLog
+    ActiveLog --> CompletedLog: exitTime set
+    state "Booking Pending" as PendingBooking
+    state "Booking Completed" as CompletedBooking
+    PendingBooking --> CompletedBooking: payment completed
+    state "Payment Pending" as PendingPayment
+    state "Payment Completed" as CompletedPayment
+    PendingPayment --> CompletedPayment: Card or Cash

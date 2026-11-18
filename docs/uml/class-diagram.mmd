@@ -1,0 +1,79 @@
+classDiagram
+    class User {
+      Long id
+      String name
+      String email
+      String password
+      String contactNo
+    }
+    class Admin {
+      Long id
+      String name
+      String email
+      String password
+      Role role
+    }
+    class Vehicle {
+      Long id
+      String vehicleNo
+      VehicleType vehicleType
+      String brand
+      String model
+      String color
+    }
+    class ParkingLot {
+      Long id
+      String city
+      String location
+      Integer totalSlots
+      BigDecimal priceHr
+    }
+    class ParkingSlot {
+      Long id
+      SlotStatus status
+    }
+    class Booking {
+      Long id
+      LocalDateTime startTime
+      LocalDateTime endTime
+      PaymentStatus paymentStatus
+    }
+    class Payment {
+      Long id
+      BigDecimal amount
+      PaymentMethod method
+      PaymentStatus status
+      LocalDateTime timestamp
+    }
+    class VehicleLog {
+      Long id
+      LocalDateTime entryTime
+      LocalDateTime exitTime
+    }
+    class Notification {
+      Long id
+      NotificationType type
+      String description
+      LocalDateTime timestamp
+    }
+    class Report {
+      Long id
+      ReportType type
+      LocalDateTime generatedDate
+    }
+    class ParkingSlotDTO
+    class VehicleDTO
+
+    User "1" --> "*" Vehicle
+    User "1" --> "*" Booking
+    User "1" --> "*" Notification
+    ParkingLot "1" --> "*" ParkingSlot
+    Booking "*" --> "1" User
+    Booking "*" --> "1" Vehicle
+    Booking "*" --> "1" ParkingSlot
+    Payment "*" --> "1" Booking
+    VehicleLog "*" --> "1" Vehicle
+    VehicleLog "*" --> "1" ParkingLot
+    Notification "*" --> "0..1" User
+    Notification "*" --> "0..1" Admin
+    Report "*" --> "1" Admin

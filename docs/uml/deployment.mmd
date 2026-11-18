@@ -1,0 +1,8 @@
+flowchart LR
+    Client[User/Admin browser]
+    AppNode["Application host\nJDK 21 + Spring Boot 3.3.4\nport 8080"]
+    DbNode["Database host\nMySQL 8 / MariaDB-compatible\nparqhub_db"]
+    Smtp["SMTP mail service\nconfigured JavaMailSender"]
+    Client -->|HTTP| AppNode
+    AppNode -->|JDBC| DbNode
+    AppNode -->|SMTP| Smtp

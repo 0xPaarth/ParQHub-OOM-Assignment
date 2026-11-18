@@ -1,0 +1,42 @@
+flowchart LR
+    Guest([Guest])
+    User([User])
+    Admin([Admin])
+    PaymentProvider([Configured SMTP / payment handling])
+
+    subgraph ParQHub["ParQHub web application"]
+        Browse([Browse home and login pages])
+        Register([Register user and vehicles])
+        UserLogin([User login])
+        Search([Search parking by city/location])
+        ManageVehicles([Manage vehicles])
+        Book([Book available parking slot])
+        VehicleFlow([Record vehicle entry/exit])
+        Pay([Process payment and download receipt])
+        Notifications([View/delete notifications])
+        Settings([Update user settings])
+        AdminLogin([Admin login])
+        Dashboard([View role-filtered dashboard])
+        ManageParking([View/manage parking slots])
+        Tables([Manage application tables])
+        Reports([Generate/view/export reports])
+        SendNotification([Send slot/security notification])
+    end
+
+    Guest --> Browse
+    Guest --> Register
+    Guest --> UserLogin
+    User --> Search
+    User --> ManageVehicles
+    User --> Book
+    User --> VehicleFlow
+    User --> Pay
+    User --> Notifications
+    User --> Settings
+    Admin --> AdminLogin
+    Admin --> Dashboard
+    Admin --> ManageParking
+    Admin --> Tables
+    Admin --> Reports
+    Admin --> SendNotification
+    Pay --> PaymentProvider

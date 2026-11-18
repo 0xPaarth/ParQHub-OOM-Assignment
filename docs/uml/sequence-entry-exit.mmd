@@ -1,0 +1,16 @@
+sequenceDiagram
+    actor User
+    participant VLC as VehicleLogController
+    participant BR as BookingRepository
+    participant VLR as VehicleLogRepository
+    participant SR as ParkingSlotRepository
+    User->>VLC: POST /user/log-entry
+    VLC->>BR: find pending booking for vehicle
+    VLC->>SR: set slot OCCUPIED
+    VLC->>VLR: save active VehicleLog
+    VLC-->>User: Entry recorded
+    User->>VLC: POST /user/log-exit
+    VLC->>VLR: find active log
+    VLC->>VLR: set exitTime
+    VLC->>SR: set slot AVAILABLE
+    VLC-->>User: Redirect to payment gateway

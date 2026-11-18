@@ -1,0 +1,19 @@
+flowchart LR
+    Browser[Browser]
+    subgraph SpringBoot["Spring Boot application"]
+        MVC[Spring MVC Controllers]
+        Views[Thymeleaf templates]
+        Services[Service layer]
+        Strategies[Payment and admin-auth strategies]
+        Repos[Spring Data JPA repositories]
+        Mail[JavaMailSender]
+    end
+    DB[(MySQL parqhub_db)]
+    Browser --> MVC
+    MVC --> Views
+    MVC --> Services
+    MVC --> Repos
+    Services --> Strategies
+    Services --> Repos
+    MVC --> Mail
+    Repos --> DB
